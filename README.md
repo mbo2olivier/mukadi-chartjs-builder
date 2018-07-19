@@ -1,7 +1,7 @@
 Mukadi Chart Builder
 ====================
 
-Generate beautiful and fully customised charts directly from data stored in your DB. The `mukadi/chartjs-builder`library use [Chart.js](https://www.chartjs.org/) for displaying charts and [PDO](http://php.net/manual/fr/class.pdo.php) for querying data in your database.
+Generate beautiful and fully customised charts directly from SQL query. The `mukadi/chartjs-builder`library use [Chart.js](https://www.chartjs.org/) for displaying charts and [PDO](http://php.net/manual/fr/class.pdo.php) for querying data in your database.
 
 ## Installation
 

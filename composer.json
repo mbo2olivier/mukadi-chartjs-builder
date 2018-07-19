@@ -1,6 +1,6 @@
 {
     "name": "mukadi/chartjs-builder",
-    "description": "generate beautiful charts directly from database in PHP",
+    "description": "generate beautiful charts directly from SQL query in PHP",
     "type": "library",
     "license": "MIT",
     "authors": [
