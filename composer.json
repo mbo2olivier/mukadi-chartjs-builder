@@ -1,0 +1,20 @@
+{
+    "name": "mukadi/chartjs-builder",
+    "description": "generate beautiful charts directly from database in PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olivier M. Mukadi",
+            "email": "olivier.m@geniusconception.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mukadi\\Chart\\": "src"
+        }
+    }
+}
