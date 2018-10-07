@@ -145,7 +145,7 @@ class Chart
     }
 
     public function __toString() {
-        $html = "<div class='mukadi_chartJs_container' data-labels='%s' data-target='%s' data-datasets='%s' data-options='%s' data-chart-type='%s'><canvas id='%s'></canvas></div>";
-        return sprintf($html,json_encode($this->getLabels()),$this->getId(),json_encode($this->getDatasets()),json_encode($this->getOptions()),$this->getType(),$this->getId());
+        $html = '<div class="mukadi_chartJs_container" data-labels="%s" data-target="%s" data-datasets="%s" data-options="%s" data-chart-type="%s"><canvas id="%s"></canvas></div>';
+        return sprintf($html, htmlspecialchars(json_encode($this->getLabels())),$this->getId(),htmlspecialchars(json_encode($this->getDatasets())),htmlspecialchars(json_encode($this->getOptions())),$this->getType(),$this->getId());
     }
 }
