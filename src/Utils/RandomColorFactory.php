@@ -42,7 +42,7 @@ class RandomColorFactory {
     public static function getRandomColors($number){
         $color = array();
         for($i= 0;$i<$number;$i++)
-            $color[] = self::getRandomRGBColor();
+            $color[] = self::randomRGBColor();
         return $color;
     }
 
