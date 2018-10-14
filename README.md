@@ -32,6 +32,10 @@ $builder
     ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video WHERE possesseur = :possesseur GROUP BY console')
     ->setParameter(':possesseur',"Kapiamba")
 ```
+
+You can also pass a Doctrine\ORM\Query object instead of a DQL query.
+This allow you to use a repository to store your charts queries.
+
 ## Labels and datasets
 
 After the query configuration,  you can set chart datasets and labels (displayed in the x axis):
