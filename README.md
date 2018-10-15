@@ -60,8 +60,15 @@ Last but not least, you have to build and render the chart in your view. For bui
 ``` php
 use Mukadi\Chart\Chart;
 
+# Build the chart 
 $chart = $builder->buildChart('game_stat_chart',Chart::BAR);
 
+//then you can add or override the chart options. In this example you remove the onClick behavior of legend
+$chart->pushOptions([
+    'legend' => [
+        'onClick' => null,
+    ]
+]);
 ```
 For render the chart in your page juste make an echo:
 
