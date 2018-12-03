@@ -32,6 +32,10 @@ abstract class AbstractBuilder
     protected $hasLabels;
 
     public function __construct(){
+        $this->resetData();
+    }
+
+    protected function resetData() {
         $this->labels = null;
         $this->datasets = array();
         $this->options = array();
@@ -81,6 +85,7 @@ abstract class AbstractBuilder
         }else{
             $this->hasLabels = false;
         }
+        return $this;
     }
 
     protected function computeData() {
@@ -115,6 +120,7 @@ abstract class AbstractBuilder
         $c->setDatasets(array_values($this->datasets));
         if(!is_null($type)) $c->setType($type);
         if(is_array($options)) $c->pushOptions($options);
+        $this->resetData();
         return $c;
     }
 }
