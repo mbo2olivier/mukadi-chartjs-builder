@@ -30,6 +30,8 @@ abstract class AbstractBuilder
      * @var boolean
      */
     protected $hasLabels;
+    
+    protected $labelFunc;
 
     public function __construct(){
         $this->resetData();
@@ -40,6 +42,7 @@ abstract class AbstractBuilder
         $this->datasets = array();
         $this->options = array();
         $this->hasLabels = false;
+        $this->labelFunc = null;
     }
     /**
      * @return array
@@ -78,8 +81,9 @@ abstract class AbstractBuilder
     /**
      * @param array|string $labels
      */
-    public function labels($labels) {
+    public function labels($labels, $func = null) {
         $this->labels = $labels;
+        $this->labelFunc = $func;
         if(is_array($labels)) {
             $this->hasLabels = true;
         }else{
@@ -94,7 +98,7 @@ abstract class AbstractBuilder
         $labels = $this->hasLabels? $this->labels: [];
         foreach ($data as $input) {
             if (!$this->hasLabels) {
-                $labels[] = $input[$this->labels];
+                $labels[] = ($this->labelFunc) ?  \call_user_func($this->labelFunc, $input[$this->labels]): $input[$this->labels];
             }
             foreach($keys as $k) {
                 $this->datasets[$k]['data'][] = $input[$k];
