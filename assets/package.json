@@ -1,0 +1,16 @@
+{
+  "name": "mukadi-chartjs-builder",
+  "version": "1.0.0",
+  "description": "frontend helper for the mukadi/chartjs-builder PHP library",
+  "main": "index.js",
+  "author": "Olivier M. Mukadi <olivier.m@geniusconception.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "rollup": "^2.33.1",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "dependencies": {
+    "chart.js": "^2.9.4"
+  }
+}

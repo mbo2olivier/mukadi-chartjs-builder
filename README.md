@@ -80,9 +80,8 @@ echo $chart;
 Don't forget to include libraries in your page:
 
 ``` html
-<script src="assets/jquery.js"></script>
-<script src="assets/Chart.bundle.min.js"></script>
-<script src="assets/mukadi.chart.min.js"></script>
+<script src="dist/Chart.bundle.min.js"></script>
+<script src="dist/mukadi.chart.min.js"></script>
 
 ```
 And that's all !
