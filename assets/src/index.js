@@ -2,7 +2,7 @@ import Chart from 'chart.js'
 
 let rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/
 
-export function toCamelCase (str) {
+function toCamelCase (str) {
     return str
         .replace(/\-(.)/g, function($1) { return $1.toUpperCase(); })
         .replace(/\-/g, '')

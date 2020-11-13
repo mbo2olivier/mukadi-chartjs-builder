@@ -1,4 +1,4 @@
-var mukadiChart = (function (exports, Chart) {
+var mukadiChart = (function (Chart) {
     'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -54,11 +54,6 @@ var mukadiChart = (function (exports, Chart) {
         start: start
     };
 
-    exports.default = index;
-    exports.toCamelCase = toCamelCase;
+    return index;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
-
-    return exports;
-
-}({}, Chart));
+}(Chart));
