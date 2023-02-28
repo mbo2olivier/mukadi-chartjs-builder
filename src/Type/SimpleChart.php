@@ -28,6 +28,10 @@ class SimpleChart extends Chart {
         $this->datasets[$key] = [
             "label" => $config->_label,
         ];
+
+        if ($config->_type !== null) {
+            $this->datasets[$key]['type'] = $config->_type;
+        }
         
         $this->datasets[$key] = array_merge($this->datasets[$key], $config->_options);
 

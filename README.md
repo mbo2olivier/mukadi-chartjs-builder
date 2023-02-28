@@ -85,6 +85,7 @@ $chart = $factory
         ->end()
         # you can add many datasets as you want
         ->dataset("Prix moyen")
+            ->asLine() # you can set a different chart type to a dataset and create mixed chart
             ->data('prix')
             ->useRandomBackgroundColor() # dataset color helper
         ->end()

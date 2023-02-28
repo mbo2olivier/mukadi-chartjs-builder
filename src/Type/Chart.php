@@ -45,7 +45,7 @@ abstract class Chart implements ChartInterface {
         return $this;
     }
 
-    public function dataset(string $label = ""): DatasetConfigurator {
+    public function dataset(string $label = ""): DatasetConfiguratorInterface {
         return new DatasetConfigurator($this, $label);
     }
 
