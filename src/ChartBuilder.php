@@ -1,6 +1,9 @@
 <?php
 namespace Mukadi\Chart;
 
+use Mukadi\Chart\Type\BubbleChart;
+use Mukadi\Chart\Type\Chart;
+use Mukadi\Chart\Type\ScatterChart;
 use Mukadi\Chart\Type\SimpleChart;
 
 class ChartBuilder implements ChartBuilderInterface, ChartDefinitionBuilderInterface {
@@ -36,39 +39,51 @@ class ChartBuilder implements ChartBuilderInterface, ChartDefinitionBuilderInter
         return $c;
     }
 
-    public function asBar(): SimpleChart
+    public function asBar(): Chart
     {
         $this->chart = new SimpleChart(ChartView::BAR, $this);
         return $this->chart;
     }
 
-    public function asPie(): SimpleChart
+    public function asPie(): Chart
     {
         $this->chart = new SimpleChart(ChartView::PIE, $this);
         return $this->chart;
     }
 
-    public function asDoughnut(): SimpleChart
+    public function asDoughnut(): Chart
     {
         $this->chart = new SimpleChart(ChartView::DOUGHNUT, $this);
         return $this->chart;
     }
 
-    public function asLine(): SimpleChart
+    public function asLine(): Chart
     {
         $this->chart = new SimpleChart(ChartView::LINE, $this);
         return $this->chart;
     }
 
-    public function asPolarArea(): SimpleChart
+    public function asPolarArea(): Chart
     {
         $this->chart = new SimpleChart(ChartView::POLAR_AREA, $this);
         return $this->chart;
     }
 
-    public function asRadar(): SimpleChart
+    public function asRadar(): Chart
     {
         $this->chart = new SimpleChart(ChartView::RADAR, $this);
+        return $this->chart;
+    }
+
+    public function asBubble(): Chart {
+        $this->chart = new BubbleChart($this);
+
+        return $this->chart;
+    }
+
+    public function asScatter(): Chart {
+        $this->chart = new ScatterChart($this);
+
         return $this->chart;
     }
 }

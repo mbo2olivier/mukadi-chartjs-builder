@@ -1,14 +1,16 @@
 <?php
 namespace Mukadi\Chart;
 
-use Mukadi\Chart\Type\SimpleChart;
+use Mukadi\Chart\Type\Chart;
 
 interface ChartDefinitionBuilderInterface {
 
-    function asBar(): SimpleChart;
-    function asPie(): SimpleChart;
-    function asLine(): SimpleChart;
-    function asDoughnut(): SimpleChart;
-    function asPolarArea(): SimpleChart;
-    function asRadar(): SimpleChart;
+    function asBar(): Chart;
+    function asPie(): Chart;
+    function asLine(): Chart;
+    function asDoughnut(): Chart;
+    function asPolarArea(): Chart;
+    function asRadar(): Chart;
+    function asBubble(): Chart;
+    function asScatter(): Chart;
 }

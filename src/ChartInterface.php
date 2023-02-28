@@ -5,7 +5,7 @@ interface ChartInterface {
 
     function build():ChartBuilderInterface;
 
-    function compute(\Traversable $data): ChartData;
+    function compute(iterable $data): ChartData;
 
     function getQuery(): string;
 }

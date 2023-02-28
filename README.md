@@ -32,6 +32,8 @@ Once the `Factory` object instanciated, you can start building your chart. First
 - Line
 - Doughnut and
 - Radar
+- Scatter
+- Bubble
 
 ``` php
 $chart = $factory
@@ -65,6 +67,8 @@ $chart = $factory
     # you can also apply transformation to the labels before been displayed on the chart
     ->labels('console',  fn($c) => strtoupper($c)) // transform all console name to uppercase
 ```
+
+Note: Bubble and Scatter chart doesn't support labels, the method as no effect on this charts and throw no error
 ### 2.4. Datasets
 
 ``` php
@@ -84,6 +88,39 @@ $chart = $factory
             ->data('prix')
             ->useRandomBackgroundColor() # dataset color helper
         ->end()
+    # build and return the chart
+    ->build()
+    ->getChart()
+    ;
+
+```
+
+Scatter and Bubble charts has a different behavior, here is how to build this kind of chart:
+
+``` php
+$scatter = $factory
+    ->createChartBuilder()
+    ->asScatter()
+        ->query("SELECT  prix, nbre_joueurs_max, console  from jeux_video jv where console = :console")
+            ->dataset("Prix")
+                ->data("nbre_joueurs_max", "prix") # you have to specify the values mapped to the X and Y axis in that order
+                ->useRandomBackgroundColor(false)
+            ->end()
+    # build and return the chart
+    ->build()
+    ->getChart()
+    ;
+
+$bubble = $factory
+    ->createChartBuilder()
+    ->asBubble()
+        ->query("SELECT  prix, nbre_joueurs_max, ventes  from jeux_video jv where console = :console")
+            ->dataset("Prix")
+                ->data("nbre_joueurs_max", "prix", "ventes") # you have to specify the values mapped to the X, Y axis and the radius in that order
+                ->options([
+                    'backgroundColor' => RandomColorFactory::randomRGBColor(),
+                ])
+            ->end()
     # build and return the chart
     ->build()
     ->getChart()
