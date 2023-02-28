@@ -29,7 +29,7 @@ function start(el) {
     for(let i = 0; i < containers.length; i++) {
         let div = containers[i];
 
-        let id = _data(div, 'target');
+        let el = div.firstChild;
         let config = {
             type: _data(div, 'chart-type'),
             data: {
@@ -39,11 +39,13 @@ function start(el) {
             options: _data(div, 'options')
         }
 
-        charts[id] = new Chart(document.getElementById(id), config)
+        charts.push(new Chart(el, config));
     }
 }
 
-start(document)
+window.onload = () => {
+    start(document);
+}
 
 export default {
     start

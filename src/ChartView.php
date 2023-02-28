@@ -8,64 +8,60 @@
  */
 namespace Mukadi\Chart;
 /**
- * Class Chart.
+ * Class ChartView.
  * 
  * @author Olivier M. Mukadi <olivier.m@geniusconception.com>
  */
-class Chart  
+class ChartView  
 {
     const BAR = 'bar';
     const LINE = 'line';
     const RADAR = 'radar';
     const POLAR_AREA = 'polarArea';
-    const BUBBLE = 'bar';
+    const BUBBLE = 'bubble';
+    const SCATTER = 'scatter';
     const PIE = 'pie';
     const DOUGHNUT = 'doughnut';
 
     /**
      * @var string
      */
-    protected $id;
+    protected string $id;
     /**
      * @var array
      */
-    protected $options;
+    protected array $options;
     /**
      * @var string
      */
-    protected $type;
+    protected string $type;
     /**
      * @var array
      */
-    protected $datasets;
+    protected array $datasets;
     /**
      * @var array
      */
-    protected $labels;
+    protected array $labels;
 
-    /**
-     * @param string $id
-     */
-    public function __construct($id){
-        $this->id = $id;
-        $this->type = self::BAR;
+    public function __construct(string $type){
+        $this->id = "";
+        $this->type = $type;
         $this->labels = array();
         $this->datasets = array();
         $this->options = array(
-            "scales"=>array(
-                "yAxes" => array(
-                    array(
-                        "ticks"=> array("beginAtZero"=>true)
-                    )
-                )
-            )
+            "scales" => [
+                "y" => [
+                    "beginAtZero" => true,
+                ]
+            ]
         );
     }
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -73,7 +69,7 @@ class Chart
     /**
      * @return array
      */
-    public function getDatasets()
+    public function getDatasets(): array
     {
         return $this->datasets;
     }
@@ -83,7 +79,7 @@ class Chart
      *
      * @return Chart
      */
-    public function setDatasets($datasets)
+    public function setDatasets($datasets): self
     {
         $this->datasets = $datasets;
 
@@ -93,7 +89,7 @@ class Chart
     /**
      * @return array
      */
-    public function getLabels()
+    public function getLabels():array
     {
         return $this->labels;
     }
@@ -103,7 +99,7 @@ class Chart
      *
      * @return Chart
      */
-    public function setLabels($labels)
+    public function setLabels($labels): self
     {
         $this->labels = $labels;
 
@@ -113,7 +109,7 @@ class Chart
     /**
      * @return string
      */
-    public function getType()
+    public function getType():string
     {
         return $this->type;
     }
@@ -123,7 +119,7 @@ class Chart
      *
      * @return Chart
      */
-    public function setType($type)
+    public function setType($type):string
     {
         $this->type = $type;
 
@@ -133,12 +129,12 @@ class Chart
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions():array
     {
         return $this->options;
     }
 
-    public function pushOptions($options = array()){
+    public function pushOptions($options = array()): self{
         $this->options = array_merge($this->options,$options);
 
         return $this;
@@ -147,5 +143,19 @@ class Chart
     public function __toString() {
         $html = '<div class="mukadi_chartJs_container" data-labels="%s" data-target="%s" data-datasets="%s" data-options="%s" data-chart-type="%s"><canvas id="%s"></canvas></div>';
         return sprintf($html, htmlspecialchars(json_encode($this->getLabels())),$this->getId(),htmlspecialchars(json_encode($this->getDatasets())),htmlspecialchars(json_encode($this->getOptions())),$this->getType(),$this->getId());
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @param  string  $id
+     *
+     * @return  self
+     */ 
+    public function setId(string $id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

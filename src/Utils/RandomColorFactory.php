@@ -17,21 +17,21 @@ class RandomColorFactory {
     /**
      * @return int
      */
-    public static function randomColorFactor(){
+    public static function randomColorFactor(): int {
         return rand(0,255);
     }
 
     /**
      * @return string
      */
-    public static function randomRGBColor(){
+    public static function randomRGBColor(): string {
         return sprintf("rgb(%d,%d,%d)",self::randomColorFactor(),self::randomColorFactor(),self::randomColorFactor());
     }
 
     /**
      * @return string
      */
-    public static function randomRGBAColor(){
+    public static function randomRGBAColor(): string{
         return sprintf("rgba(%d,%d,%d,%s)",self::randomColorFactor(),self::randomColorFactor(),self::randomColorFactor(),(rand(0,100)/100));
     }
 
@@ -39,7 +39,7 @@ class RandomColorFactory {
      * @param integer $number
      * @return array
      */
-    public static function getRandomColors($number){
+    public static function getRandomColors($number): array {
         $color = array();
         for($i= 0;$i<$number;$i++)
             $color[] = self::randomRGBColor();
@@ -50,7 +50,7 @@ class RandomColorFactory {
      * @param integer $number
      * @return array
      */
-    public static function getRandomRGBAColors($number){
+    public static function getRandomRGBAColors($number): array {
         $color = array();
         for($i= 0;$i<$number;$i++)
             $color[] = self::randomRGBAColor();

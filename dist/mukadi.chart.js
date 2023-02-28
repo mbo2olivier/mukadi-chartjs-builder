@@ -1,10 +1,6 @@
 var mukadiChart = (function (Chart) {
     'use strict';
 
-    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-    var Chart__default = /*#__PURE__*/_interopDefaultLegacy(Chart);
-
     var rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/;
 
     function toCamelCase (str) {
@@ -34,7 +30,7 @@ var mukadiChart = (function (Chart) {
         for(var i = 0; i < containers.length; i++) {
             var div = containers[i];
 
-            var id = _data(div, 'target');
+            var el$1 = div.firstChild;
             var config = {
                 type: _data(div, 'chart-type'),
                 data: {
@@ -44,11 +40,13 @@ var mukadiChart = (function (Chart) {
                 options: _data(div, 'options')
             };
 
-            charts[id] = new Chart__default['default'](document.getElementById(id), config);
+            charts.push(new Chart(el$1, config));
         }
     }
 
-    start(document);
+    window.onload = function () {
+        start(document);
+    };
 
     var index = {
         start: start
@@ -56,4 +54,4 @@ var mukadiChart = (function (Chart) {
 
     return index;
 
-}(Chart));
+})(Chart);

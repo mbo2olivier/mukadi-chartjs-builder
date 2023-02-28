@@ -1,9 +1,9 @@
 Mukadi Chart Builder
 ====================
 
-Generate beautiful and fully customised charts directly from SQL query. The `mukadi/chartjs-builder`library use [Chart.js](https://www.chartjs.org/) for displaying charts and [PDO](http://php.net/manual/fr/class.pdo.php) for querying data in your database.
+Generate beautiful and fully customised charts directly from SQL query. The `mukadi/chartjs-builder` library use [Chart.js](https://www.chartjs.org/) for displaying charts and [PDO](http://php.net/manual/fr/class.pdo.php) for querying data in your database.
 
-## Installation
+## 1. Installation
 
 Run `php composer.phar require mukadi/chartjs-builder`
 
@@ -12,58 +12,119 @@ If your are not using composer for managing your dependencies (you should !), yo
 ``` php
 require 'path-to-the-library/autoload.php';
 ```
-## Chart builder
+## 2. The Factory
 
-The `Mukadi\Chart\Builder` is the main package class used for create chart from SQL query. This class require a valid PDO connection as constructor parameter:
+The `Mukadi\Chart\Factory\ChartFactory` is the main package class used for create chart from SQL query. This class require a valid PDO connection as constructor parameter:
 
 ``` php
-use Mukadi\Chart\Builder;
+use Mukadi\Chart\Factory\ChartFactory;
 
-$connection = new \PDO('mysql:dbname=test_jx;host=127.0.0.1','root','root');
-$builder = new Builder($connection);
+$connection = new \PDO('sqlite:/Users/foo/Projects/bar.db');
+$factory = new ChartFactory($connection);
 ```
-Once the `Builder` object instanciated, your can set the query from which you want your chart being generated
+
+### 2.1. Chart Types
+Once the `Factory` object instanciated, you can start building your chart. First thing to do is to specify the type of the chart you want, supported types are :
+
+- Bar
+- Pie
+- Polar area
+- Line
+- Doughnut and
+- Radar
 
 ``` php
-$builder->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video GROUP BY console')
-
-# or with parameters
-$builder
-    ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video WHERE possesseur = :possesseur GROUP BY console')
-    ->setParameter(':possesseur',"Kapiamba")
-```
-## Labels and datasets
-
-After the query configuration,  you can set chart datasets and labels (displayed in the x axis):
-
-``` php
-use Mukadi\Chart\Utils\RandomColorFactory;
-
-$builder
+$chart = $factory
+    ->createChartBuilder()
+    ->asBar() // asPie(), asPolarArea(), asLine() etc...
     ...
-    ->addDataset('total','Totals',[
-        "backgroundColor" => RandomColorFactory::getRandomColors(12),
-    ])
-    ->addDataset('prix','Prix moyen',[
-        "backgroundColor" => RandomColorFactory::getRandomColors(12),
-    ])
-    ->labels('console')
+```
+
+### 2.2. Query
+Once the `Factory` object instanciated, your can set the query from which you want your chart being generated
+
+``` php
+$chart = $factory
+    ->createChartBuilder()
+    ->asBar()
+        ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video GROUP BY console') // SQL query
+```
+### 2.3. Labels
+After the query configuration,  you can set chart labels (displayed in the x axis):
+
+``` php
+$chart = $factory
+    ->createChartBuilder()
+    ->asBar()
+        ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video GROUP BY console') // SQL query
+    ->labels('console') // mapped to the console column
+    
+    # or you can provide array of predefined values
+    ->labels(['NES', 'Game Cube', 'PSOne'])
+
+    # you can also apply transformation to the labels before been displayed on the chart
+    ->labels('console',  fn($c) => strtoupper($c)) // transform all console name to uppercase
+```
+### 2.4. Datasets
+
+``` php
+$chart = $factory
+    ->createChartBuilder()
+    ->asBar()
+        ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video GROUP BY console')
+        ->labels('console')
+        ->dataset("Total") # dataset labels
+            ->data('total') # dataset mapped to the "total" column
+            ->options([
+                'backgroundColor' => RandomColorFactory::randomRGBColor()
+            ])
+        ->end()
+        # you can add many datasets as you want
+        ->dataset("Prix moyen")
+            ->data('prix')
+            ->useRandomBackgroundColor() # dataset color helper
+        ->end()
+    # build and return the chart
+    ->build()
+    ->getChart()
+    ;
 
 ```
 
 Setup datasets by specifying: the column where fetching data, a text that will be used as label for the dataset and optionally an array of options (see the [chart.js documentation](http://www.chartjs.org/docs/) for available options). For the chart labels just set the column where querying data or directly put an array of string.
 
-## build and render chart
+### 2.5. Dataset helpers
+
+*helper* | *description*
+--- | --- 
+useRandomBackgroundColor(bool $alpha = true) | use a different random background color (if is alpha is true a RGBA color will be used) for each dataset value
+useRandomBorderColor(bool $alpha = true) | use a different random border color (if is alpha is true a RGBA color will be used) for each dataset value
+useRandomHoverBackgroundColor(bool $alpha = true) | use a different random hover background color (if is alpha is true a RGBA color will be used) for each dataset value
+useRandomHoverBackgroundColor(bool $alpha = true) | use a different random hover background color (if is alpha is true a RGBA color will be used) for each dataset value
+useRandomHoverBorderColor(bool $alpha = true) | use a different random hover border color (if is alpha is true a RGBA color will be used) for each dataset value
+### 2.6. Build and render chart
 
 Last but not least, you have to build and render the chart in your view. For build your chart give an Id and set the chart type, optionally you can set some options (see the [chart.js documentation](http://www.chartjs.org/docs/)  for available options):
 
 ``` php
-use Mukadi\Chart\Chart;
 
 # Build the chart 
-$chart = $builder->buildChart('game_stat_chart',Chart::BAR);
+$chart = $factory
+    ->createChartBuilder()
+    ...
+    ->build()
+    ->getChart()
+    # or you can pass chart options like this
+    ->getChart([
+        'scales' => [
+            'x' => [
+                'grid' => ['offset' => true]
+            ],
+        ]
+    ])
+;
 
-//then you can add or override the chart options. In this example you remove the onClick behavior of legend
+//You can also add or override the chart options after being built. In this example you remove the onClick behavior of legend
 $chart->pushOptions([
     'legend' => [
         'onClick' => null,
@@ -80,8 +141,84 @@ echo $chart;
 Don't forget to include libraries in your page:
 
 ``` html
-<script src="dist/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min.js"></script>
 <script src="dist/mukadi.chart.min.js"></script>
 
 ```
 And that's all !
+
+## 3. Advanced Topics
+
+### 3.1. Use parametrized query
+``` php
+use Mukadi\Chart\Factory\ChartFactory;
+
+$connection = new \PDO('sqlite:/Users/foo/Projects/bar.db');
+$factory = new ChartFactory($connection);
+
+$chart = $factory
+    ->createChartBuilder()
+    ->asBar()
+    ->query('SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video WHERE possesseur = :possesseur GROUP BY console') # prepared statement
+        ->labels('console')
+        ->dataset("Total")
+            ->data('total')->useRandomBackgroundColor()
+        ->end()
+        ->dataset("Prix moyen")
+            ->data('prix')->useRandomBackgroundColor()
+        ->end()
+    ->build()
+    # setting the parameters after the build() method invokation
+    ->setParameter(':possesseur',"Kapiamba") 
+    ->getChart()
+
+```
+
+### 3.2. Charts Definition
+
+When building charts we can quickly end up with many lines of code that pollute our controller/page (especially if it is a dashboard for example). The Charts definition is an elegant way to build your charts in separate classes, so you get a more readable code and also reusable charts (a very powerful feature when combining with parametrized query).
+
+Every Charts definition must implements the `Mukadi\Chart\ChartDefinitionBuilderInterface` interface (of course ! :-D )
+
+``` php
+use Mukadi\Chart\ChartDefinitionBuilderInterface;
+
+class VideoGame implements ChartDefinitionInterface {
+    
+    public function define(ChartDefinitionBuilderInterface $builder): void
+    {
+        $sql = "SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video WHERE possesseur = :possesseur GROUP BY console";
+
+        $builder
+            ->asPolarArea()
+            ->query($sql)
+            ->labels('console')
+            ->dataset("Total")
+                ->data('total')->useRandomBackgroundColor()
+            ->end()
+            ->dataset("Prix moyen")
+                ->data('prix')->useRandomBackgroundColor()
+            ->end()
+        ;
+    }
+}
+
+```
+
+In your controller/page you only have to write this:
+``` php
+...
+$chart = $factory
+            ->createFromDefinition(new VideoGame())
+            ->setParameter(':possesseur', 'Florent')
+            ->getChart()
+        ;
+
+# you can reuse the same definition for another owner just like this
+$chart2 = $factory
+            ->createFromDefinition(new VideoGame())
+            ->setParameter(':possesseur', 'Michel') # different parameter value
+            ->getChart()
+        ;
+
+```
