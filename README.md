@@ -216,9 +216,42 @@ $chart = $factory
 
 # you can reuse the same definition for another owner just like this
 $chart2 = $factory
-            ->createFromDefinition(new VideoGame())
+            ->createFromDefinition(VideoGame::class) # you can also use the FQCN instead of an instance
             ->setParameter(':possesseur', 'Michel') # different parameter value
             ->getChart()
         ;
 
 ```
+
+### 3.3. Custom Definition Provider
+
+Internally, the `Mukadi\Chart\Factory\ChartFactory` class use a `Mukadi\Chart\DefinitionProviderInterface` implementation to retrieve a chart definition by it's FCQN (fully qualified class name), but this implementation is very simple and work only with no-args constructor Chart definition class. So if you defintion class has some dependencies we must build it by yourself and provide the instance to the factory.
+
+There are some case where it's complex to build a definition instance by yourself or when you delegate this task to an external component such a DI container for example. In this case you may want the factory relying on the same component to build the chart definition for you.
+
+First, Implement the `Mukadi\Chart\DefinitionProviderInterface` interface :
+
+``` php
+use Mukadi\Chart\ChartDefinitionInterface;
+use Mukadi\Chart\DefinitionProviderInterface;
+
+class MyCustomDefinitionProvider implements DefinitionProviderInterface {
+
+    public function provide(string $fcqn): ChartDefinitionInterface
+    {
+        # implements your log here and return the instance
+
+        return new $theChartDefinitionInstance;
+    }
+}
+```
+
+And secondly override the default one:
+
+``` php
+$connection = new \PDO('sqlite:/Users/foo/Projects/bar.db');
+$factory = (new ChartFactory($connection))->overrideDefinitionProvider($myCustomProviderInstance);
+
+```
+
+You may also want to include the all factory in your DI strategy, to do so just implement you own factory by implementing the `Mukadi\Chart\ChartFactoryInterface` or by extending the `Mukadi\Chart\Factory\AbstractChartFactory`, you can refer to the [MukadiChartJsBundle](https://github.com/mbo2olivier/MukadiChartJSBundle) which is an integration of the current library for the Symfony Framework.
