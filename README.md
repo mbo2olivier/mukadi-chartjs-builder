@@ -216,7 +216,7 @@ $chart = $factory
 
 When building charts we can quickly end up with many lines of code that pollute our controller/page (especially if it is a dashboard for example). The Charts definition is an elegant way to build your charts in separate classes, so you get a more readable code and also reusable charts (a very powerful feature when combining with parametrized query).
 
-Every Charts definition must implements the `Mukadi\Chart\ChartDefinitionBuilderInterface` interface (of course ! :-D )
+Every Charts definition must implements the `Mukadi\Chart\ChartDefinitionInterface` interface (of course ! :-D )
 
 ``` php
 use Mukadi\Chart\ChartDefinitionBuilderInterface;
