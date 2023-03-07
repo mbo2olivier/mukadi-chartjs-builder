@@ -10,11 +10,20 @@ class ChartBuilder implements ChartBuilderInterface, ChartDefinitionBuilderInter
 
     protected ?ChartInterface $chart;
     protected array $vars;
+    protected array $options;
 
     public function __construct(protected DataFetcherInterface $fetcher)
     {
         $this->chart = null;
         $this->vars = [];
+        $this->options = [];
+    }
+
+    public function setOptions(array $options): ChartBuilderInterface
+    {
+        $this->options = $options;
+        
+        return $this;
     }
 
     public function setParameter(string $key, $value): ChartBuilderInterface
@@ -34,6 +43,7 @@ class ChartBuilder implements ChartBuilderInterface, ChartDefinitionBuilderInter
         $c = new ChartView($data->getType());
         $c->setLabels($data->getLabels());
         $c->setDatasets(array_values($data->getDatasets()));
+        if(count($this->options) > 0) $c->pushOptions($this->options);
         if(is_array($options)) $c->pushOptions($options);
 
         return $c;

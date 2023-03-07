@@ -261,6 +261,52 @@ $chart2 = $factory
 
 ```
 
+You can set query parameters and charts options directly in chart definition:
+
+``` php
+use Mukadi\Chart\ChartDefinitionBuilderInterface;
+
+class VideoGame implements ChartDefinitionInterface {
+    
+    public function define(ChartDefinitionBuilderInterface $builder): void
+    {
+        $sql = "SELECT COUNT(*) total, AVG(prix) prix, console FROM jeux_video WHERE possesseur = :possesseur GROUP BY console";
+
+        $builder
+            ->asPolarArea()
+            ->query($sql)->setParameter(':possesseur', 'Michel') # set the parameters value
+            ->labels('console')
+            ->dataset("Total")
+                ->data('total')->useRandomBackgroundColor()
+            ->end()
+            ->dataset("Prix moyen")
+                ->data('prix')->useRandomBackgroundColor()
+            ->end()
+            # set the chart options
+            ->setOptions([
+                'plugins' => [
+                    "title" => [
+                        'display' => true,
+                        'text' => "My video game chart",
+                        'font' => ['size' => 16]
+                    ]
+                ]
+            ])
+        ;
+    }
+}
+
+```
+
+So in your controller/page just build your chart:
+``` php
+...
+$chart = $factory
+            ->createFromDefinition(VideoGame::class)
+            ->getChart()
+        ;
+```
+
 ### 3.3. Custom Definition Provider
 
 Internally, the `Mukadi\Chart\Factory\ChartFactory` class use a `Mukadi\Chart\DefinitionProviderInterface` implementation to retrieve a chart definition by it's FCQN (fully qualified class name), but this implementation is very simple and work only with no-args constructor Chart definition class. So if you defintion class has some dependencies we must build it by yourself and provide the instance to the factory.

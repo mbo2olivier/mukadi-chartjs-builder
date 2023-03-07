@@ -26,6 +26,18 @@ abstract class Chart implements ChartInterface {
         return $this->q;
     }
 
+    public function setParameter(string $key, $value): self {
+        $this->builder->setParameter($key, $value);
+
+        return $this;
+    }
+
+    public function setOptions(array $options): self {
+        $this->builder->setOptions($options);
+
+        return $this;
+    }
+
     public function query(string $sql): self
     {
         $this->q = $sql;
